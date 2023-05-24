@@ -518,13 +518,14 @@ def volkswagen(url):
 
         soup = get_soup_html(url)
         soup = soup.find("div", class_="vw6-contentModelOverviewModelList__innerList")
-        model_buttons = soup.find_all("div", class_ = "vw6-contentModelOverviewModelListModel__buttons")
+        model_buttons = soup.find_all("div", class_="vw6-contentModelOverviewModelListModel__buttons")
 
         #Añadir links
         for button in model_buttons:
             button_ver_mas = button.find("a", href= True, class_= "vw6-kwcBasicLinkTagIntern vw6-kwcLinkIntern")['href']
             link_model = (root_url + button_ver_mas)
-            model_soup = get_soup_html(link_model)
+
+            model_soup = get_soup_html(link_model)#Saca html de la pagina para verificación
             time.sleep(0.5)
 
             tabla = model_soup.find("table", class_="standard")
@@ -532,24 +533,20 @@ def volkswagen(url):
                 model_soup = model_soup.find("div", class_="vw6-contentModelOverviewModelList__innerList")
                 model_buttons = model_soup.find_all("div", class_="vw6-contentModelOverviewModelListModel__buttons")
 
-                for button in model_buttons:
-                    button_ver_mas = button.find("a", href=True, class_="vw6-kwcBasicLinkTagIntern vw6-kwcLinkIntern")['href']
+                for button_model in model_buttons:
+                    button_ver_mas = button_model.find("a", href=True, class_="vw6-kwcBasicLinkTagIntern vw6-kwcLinkIntern")['href']
                     links.append(root_url + button_ver_mas)
             else:
-                 links.append(link_model)
-
-        print(links)
+                links.append(link_model)
 
         #Para cada página del modelo:
         for link in links:
-
             model_soup = get_soup_html(link)
-            time.sleep(1)
+            time.sleep(0.5)
             tabla = model_soup.find("table", class_="standard")
 
-            if not tabla:#pagina que lleva a otra elección
+            if not tabla:
                 continue
-
 
             tr_tags = tabla.find_all("tr")
 
@@ -590,14 +587,14 @@ ws = wb.active
 format_excel(ws)
 
 
-#suzuki(suzuki_url)
-#ford(ford_url)
-#nissan(nissan_url)
-#mg(mg_url)
-#fiat(fiat_url)
-#kia(kia_url)
-#honda(honda_url)
-#hyundai(hyundai_url)
+suzuki(suzuki_url)
+ford(ford_url)
+nissan(nissan_url)
+mg(mg_url)
+fiat(fiat_url)
+kia(kia_url)
+honda(honda_url)
+hyundai(hyundai_url)
 volkswagen(volkswagen_url)
 
 
